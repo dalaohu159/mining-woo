@@ -3,6 +3,7 @@ import StoreItem, {StoreItemSkeleton} from "@/components/store-item";
 import {fetchProducts, useAppContext} from "@/providers/context-provider";
 import {useEffect} from "react";
 import StoreCategories from "@/components/store-categories";
+import Search from "@/components/search";
 import InfiniteScroll from "@/components/infinite-scroll";
 
 export default function StoreFront() {
@@ -19,6 +20,7 @@ export default function StoreFront() {
     return (
         <section className="store-products">
             <StoreCategories/>
+            <Search />
             {items}
             <InfiniteScroll
                 callback={() => fetchProducts(state, dispatch)}

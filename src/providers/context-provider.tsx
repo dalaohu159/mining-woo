@@ -14,6 +14,7 @@ type Action =
     | { type: "inc", product: Product }
     | { type: "dec", product: Product }
     | { type: "comment", comment: string }
+    | { type: "set-search-query"; payload: string };
 
 type Dispatch = (action: Action) => void
 
@@ -54,6 +55,7 @@ type State = {
     cart: Map<number, CartItem>
     comment?: string,
     shippingZone: number,
+    searchQuery: string,
 }
 
 const StateContext = React.createContext<{ state: State; dispatch: Dispatch } | undefined>(undefined)
@@ -120,6 +122,12 @@ function contextReducer(state: State, action: Action) {
             state.comment = action.comment
             break
         }
+        case "set-search-query":
+            state.products = new Array(0)
+            state.page = 0
+            state.loading = true
+            state.hasMore = true
+            return { ...state, searchQuery: action.payload };
         default: {
             throw new Error(`Unhandled action: ${action}`)
         }
@@ -141,6 +149,7 @@ function ContextProvider({children}: {
         categories: [],
         cart: new Map<number, CartItem>(),
         shippingZone: 1,
+        searchQuery: '',
     }
     const [state, dispatch] = React.useReducer(contextReducer, init)
     // NOTE: you *might* need to memoize this value
@@ -167,11 +176,17 @@ function fetchProducts(state: State, dispatch: Dispatch) {
     dispatch({type: "loading"})
     const page = (state.page + 1)
     const categoryId = state.selectedCategory?.id
+    const searchQuery = state.searchQuery;
     let url = "api/products?per_page=" + PER_PAGE + "&page=" + page
     //other types not supported yet!
     url = url + "&type=simple"
     if (categoryId)
-        url = url + "&category=" + categoryId
+        url = url + "&category=" + categoryId;
+    // TODO: сделать нормальное формирование урла
+    console.log(searchQuery);
+    if (searchQuery) {
+        url += `&search=${searchQuery}`;
+    }
     fetch(url, {method: "GET"}).then((res) =>
         res.json().then((products) => {
             const hasMore = products.length === PER_PAGE
