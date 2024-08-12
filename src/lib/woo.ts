@@ -18,7 +18,8 @@ function get(api: string, query?: URLSearchParams) {
 
 function call(method: string, api: string, query?: URLSearchParams, body?: any) {
     const headers = {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "authorization": "Basic ZGFsYW9odTprVEFeTUUhYXUjVmdLZ01Jc05qVHlvKDM="
     };
 
     let url = `${WOOCOMMERCE_URL}/wp-json/wc/v3/${api}`.replace("//", "/");
