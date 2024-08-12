@@ -179,7 +179,7 @@ function fetchProducts(state: State, dispatch: Dispatch) {
     const searchQuery = state.searchQuery;
     let url = "api/products?per_page=" + PER_PAGE + "&page=" + page
     //other types not supported yet!
-    url = url + "&type=simple"
+    url = url + "&type=product"
     if (categoryId)
         url = url + "&category=" + categoryId;
     // TODO: сделать нормальное формирование урла
